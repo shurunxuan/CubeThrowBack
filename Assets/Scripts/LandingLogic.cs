@@ -5,7 +5,7 @@ using UnityEngine;
 public class LandingLogic : MonoBehaviour {
     public float snapToLand;
 
-    private Robot robot;
+    public Robot robot;
     private LandingLogic above;
     private Collider below;
     private LandingLogic belowPlayer;
