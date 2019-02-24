@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private MovementController movementController;
     private JumpThrowController jumpThrowController;
     private AttackController attackController;
+    private LandingLogic landingLogic;
 
     private GameObject indicator;
     // Use this for initialization
@@ -17,9 +18,10 @@ public class PlayerController : MonoBehaviour
         if (PlayerNumber < 1 || PlayerNumber > 4)
             Debug.LogError("Don't do that again. -- Victor");
 
-        movementController = gameObject.GetComponent<MovementController>();
-        jumpThrowController = gameObject.GetComponent<JumpThrowController>();
-        attackController = gameObject.GetComponent<AttackController>();
+        movementController = GetComponent<MovementController>();
+        jumpThrowController = GetComponent<JumpThrowController>();
+        attackController = GetComponent<AttackController>();
+        landingLogic = GetComponent<LandingLogic>();
 
         Transform indicatorTransform = transform.Find("Indicator");
         if (indicatorTransform == null)
@@ -31,13 +33,25 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movementController.Horizontal = Input.GetAxis("LeftHorizontal" + PlayerNumber);
-        movementController.Vertical = Input.GetAxis("LeftVertical" + PlayerNumber);
-        movementController.RightHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
-        movementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
-        jumpThrowController.JumpThrow = Input.GetButtonDown("Jump" + PlayerNumber);
-        attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
-
+        if (landingLogic.robot != null)
+        {
+            // Robot move
+            landingLogic.robot.MovementController.Horizontal = Input.GetAxis("LeftHorizontal" + PlayerNumber);
+            landingLogic.robot.MovementController.Vertical = Input.GetAxis("LeftVertical" + PlayerNumber);
+            landingLogic.robot.MovementController.RightHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
+            landingLogic.robot.MovementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
+            // Robot attack
+            landingLogic.robot.AttackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
+        }
+        else
+        {
+            movementController.Horizontal = Input.GetAxis("LeftHorizontal" + PlayerNumber);
+            movementController.Vertical = Input.GetAxis("LeftVertical" + PlayerNumber);
+            movementController.RightHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
+            movementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
+            jumpThrowController.JumpThrow = Input.GetButtonDown("Jump" + PlayerNumber);
+            attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
+        }
 
         indicator.SetActive(Vector2.Distance(Vector2.zero,
                                 new Vector2(movementController.RightHorizontal, movementController.RightVertical)) > 0.2f);
