@@ -8,6 +8,10 @@ public class MovementController : MonoBehaviour
     public float Horizontal;
     [HideInInspector]
     public float Vertical;
+    [HideInInspector]
+    public float RightHorizontal;
+    [HideInInspector]
+    public float RightVertical;
 
 
     public float MovementSpeed;
@@ -26,6 +30,7 @@ public class MovementController : MonoBehaviour
     void Update()
     {
         transform.position += (cameraForward * Vertical + cameraRight * Horizontal) * MovementSpeed;
+        transform.LookAt(RightHorizontal * cameraRight + RightVertical * cameraForward + transform.position);
 
         if (RotateWhenMove)
         {
