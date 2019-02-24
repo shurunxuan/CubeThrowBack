@@ -9,7 +9,7 @@ public class LandingLogic : MonoBehaviour {
 
     [HideInInspector]
     public Robot robot;
-    private LandingLogic above;
+    public LandingLogic above;
     private Collider below;
     private LandingLogic belowPlayer;
     private Rigidbody rigid;

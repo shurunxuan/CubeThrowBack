@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     [Range(1, 4)]
     public int PlayerNumber;
     public float StunTime = .1f;
+    public float KnockBack = 100;
+    public float ThrowBack = 1000;
 
     private MovementController movementController;
     private JumpThrowController jumpThrowController;
@@ -85,7 +87,18 @@ public class PlayerController : MonoBehaviour
             movementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
             if(Input.GetButtonDown("Jump" + PlayerNumber))
             {
-                jumpThrowController.JumpThrow = true;
+                if (landingLogic.above)
+                {
+                    PlayerController other = landingLogic.above.GetComponent<PlayerController>();
+                    other.jumpThrowController.JumpThrow = true;
+                    other.jumpThrowController.KnockBack = -transform.forward * ThrowBack;
+                    other.Stunned = true;
+                    other.stunTimer = other.StunTime;
+                }
+                else
+                {
+                    jumpThrowController.JumpThrow = true;
+                }
             }
             attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
         }
@@ -106,7 +119,7 @@ public class PlayerController : MonoBehaviour
         rigid.velocity = Vector3.zero;
         jumpThrowController.KnockBack = other.transform.forward;
         jumpThrowController.KnockBack.y = 0;
-        jumpThrowController.KnockBack = Vector3.Normalize(jumpThrowController.KnockBack) * 100;
+        jumpThrowController.KnockBack = Vector3.Normalize(jumpThrowController.KnockBack) * KnockBack;
         jumpThrowController.JumpThrow = true;
         Debug.Log(name + " damaged by " + other.name);
     }
