@@ -8,6 +8,10 @@ public class MovementController : MonoBehaviour
     public float Horizontal;
     [HideInInspector]
     public float Vertical;
+    [HideInInspector]
+    public float RightHorizontal;
+    [HideInInspector]
+    public float RightVertical;
 
 
     public float MovementSpeed;
@@ -32,9 +36,8 @@ public class MovementController : MonoBehaviour
         Vector3 vel = (cameraForward * Vertical + cameraRight * Horizontal) * MovementSpeed;
         vel.y = yVel;
         rigid.velocity = vel;
-        if (RotateWhenMove)
-        {
-            transform.LookAt(Horizontal * cameraRight + Vertical * cameraForward + transform.position);
-        }
+
+        transform.position += (cameraForward * Vertical + cameraRight * Horizontal) * MovementSpeed;
+        transform.LookAt(RightHorizontal * cameraRight + RightVertical * cameraForward + transform.position);
     }
 }

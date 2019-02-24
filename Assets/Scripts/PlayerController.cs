@@ -33,14 +33,14 @@ public class PlayerController : MonoBehaviour
     {
         movementController.Horizontal = Input.GetAxis("LeftHorizontal" + PlayerNumber);
         movementController.Vertical = Input.GetAxis("LeftVertical" + PlayerNumber);
-        attackController.HumanAttackHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
-        attackController.HumanAttackVertical = Input.GetAxis("RightVertical" + PlayerNumber);
+        movementController.RightHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
+        movementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
         jumpThrowController.JumpThrow = Input.GetButtonDown("Jump" + PlayerNumber);
-        attackController.RobotAttack = Input.GetButtonDown("Attack" + PlayerNumber);
+        attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
 
 
         indicator.SetActive(Vector2.Distance(Vector2.zero,
-                                new Vector2(attackController.HumanAttackHorizontal, attackController.HumanAttackVertical)) > 0.2f);
+                                new Vector2(movementController.RightHorizontal, movementController.RightVertical)) > 0.2f);
 
     }
 }

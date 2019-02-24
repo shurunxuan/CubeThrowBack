@@ -6,11 +6,7 @@ public class AttackController : MonoBehaviour
 
     // Set by PlayerController
     [HideInInspector]
-    public bool RobotAttack;
-    [HideInInspector]
-    public float HumanAttackHorizontal;
-    [HideInInspector]
-    public float HumanAttackVertical;
+    public bool Attack;
 
     public bool IsRobot;
 
@@ -22,12 +18,6 @@ public class AttackController : MonoBehaviour
     [Header("Human Attack Properties")]
     public GameObject Projectile;
 
-    private Vector3 cameraForward;
-    private Vector3 cameraRight;
-
-    private float lastHorizontal;
-    private float lastVertical;
-
     private float coolDownTimer;
 
     private List<GameObject> otherPlayers;
@@ -35,12 +25,6 @@ public class AttackController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        cameraForward = Vector3.Cross(Camera.main.transform.right, Vector3.up);
-        cameraRight = Vector3.Cross(Vector3.up, cameraForward);
-
-        lastHorizontal = 0;
-        lastVertical = 0;
-
         otherPlayers = new List<GameObject>(3);
         GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
         foreach (var player in allPlayers)
@@ -57,27 +41,18 @@ public class AttackController : MonoBehaviour
 
         if (IsRobot)
         {
-            if (RobotAttack && coolDownTimer > AttackCoolDownTime)
+            if (Attack && coolDownTimer > AttackCoolDownTime)
             {
                 // Robot attack
                 RobotAnimator.SetTrigger("Attack");
 
-                RobotAttack = false;
+                Attack = false;
                 coolDownTimer = 0;
             }
         }
         else
         {
-            // Human rotation
-            float horDiff = HumanAttackHorizontal - lastHorizontal;
-            float verDiff = HumanAttackVertical - lastVertical;
-            Vector2 lastAbs = new Vector2(lastHorizontal, lastVertical);
-            Vector2 absolute = new Vector2(HumanAttackHorizontal, HumanAttackVertical);
-            Vector2 diff = new Vector2(horDiff, verDiff);
-            transform.LookAt(HumanAttackHorizontal * cameraRight + HumanAttackVertical * cameraForward +
-                             transform.position);
-
-            if (diff.magnitude > 0.3f && absolute.magnitude > 0.5f && lastAbs.magnitude < 0.5f && coolDownTimer > AttackCoolDownTime)
+            if (Attack && coolDownTimer > AttackCoolDownTime)
             {
                 // Human Attack
                 GameObject projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
@@ -108,12 +83,9 @@ public class AttackController : MonoBehaviour
                 projectile.SetActive(true);
 
                 coolDownTimer = 0;
+                Attack = false;
             }
         }
-
-        lastHorizontal = HumanAttackHorizontal;
-        lastVertical = HumanAttackVertical;
-
     }
 
     void OnTriggerEnter(Collider other)
