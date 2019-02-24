@@ -2,19 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
-    public float speed;
-    public float jumpHeight;
-    public float jumpTime;
-
+public class LandingLogic : MonoBehaviour {
     public float snapToLand;
 
-    public KeyCode jump;
-
     private Robot robot;
-    private Player above;
+    private LandingLogic above;
     private Collider below;
-    private Player belowPlayer;
+    private LandingLogic belowPlayer;
     private Rigidbody rigid;
 
 	// Use this for initialization
@@ -31,9 +25,6 @@ public class Player : MonoBehaviour {
         {
             transform.position = Vector3.MoveTowards(transform.position, below.transform.position, snapToLand * Time.deltaTime);
         }
-        if (above == null && Input.GetKeyDown(jump)){
-            Jump();
-        }
     }
 
     // Landing on stuff
@@ -44,7 +35,7 @@ public class Player : MonoBehaviour {
             other.enabled = false;
             below = other;
             rigid.isKinematic = true;
-            belowPlayer = other.transform.root.GetComponentInChildren<Player>();
+            belowPlayer = other.transform.root.GetComponentInChildren<LandingLogic>();
             while (belowPlayer.above) belowPlayer = belowPlayer.above;
             belowPlayer.above = this;
 
@@ -62,8 +53,8 @@ public class Player : MonoBehaviour {
             below = null;
         }
         rigid.isKinematic = false;
+        rigid.velocity = Vector3.zero;
         transform.parent = null;
-        rigid.velocity = new Vector3(0 , jumpHeight / jumpTime, 0);
     }
 
 

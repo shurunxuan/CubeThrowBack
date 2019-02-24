@@ -10,17 +10,19 @@ public class JumpThrowController : MonoBehaviour {
 
     public float JumpForce;
 
-
+    private LandingLogic lander;
     private Rigidbody playerRigidbody;
     // Use this for initialization
     void Start () {
         playerRigidbody = gameObject.GetComponent<Rigidbody>();
+        lander = GetComponent<LandingLogic>();
     }
 	
 	// Update is called once per frame
 	void Update () {
 		if (JumpThrow)
         {
+            lander.Jump();
             playerRigidbody.AddForce(Vector3.up * JumpForce);
             JumpThrow = false;
         }
