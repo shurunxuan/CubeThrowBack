@@ -5,13 +5,29 @@ public class PlayerController : MonoBehaviour
 
     [Range(1, 4)]
     public int PlayerNumber;
+    public float StunTime = .1f;
 
     private MovementController movementController;
     private JumpThrowController jumpThrowController;
     private AttackController attackController;
     private LandingLogic landingLogic;
+    private Rigidbody rigid;
 
     private GameObject indicator;
+
+    private bool stunned;
+    public bool Stunned
+    {
+        get { return stunned; }
+        set {
+            stunned = value;
+            movementController.enabled = !stunned;
+            attackController.enabled = !stunned;
+        }
+    }
+    private float stunTimer;
+
+
     // Use this for initialization
     void Start()
     {
@@ -22,17 +38,28 @@ public class PlayerController : MonoBehaviour
         jumpThrowController = GetComponent<JumpThrowController>();
         attackController = GetComponent<AttackController>();
         landingLogic = GetComponent<LandingLogic>();
+        rigid = GetComponent<Rigidbody>();
 
         Transform indicatorTransform = transform.Find("Indicator");
         if (indicatorTransform == null)
             Debug.LogError("Please attach an Indicator to the player (both human and robot)!");
         else
             indicator = indicatorTransform.gameObject;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (stunned)
+        {
+            stunTimer -= Time.deltaTime;
+            if(stunTimer < 0)
+            {
+                Stunned = false;
+            }
+        }
+
         if (landingLogic.robot != null)
         {
             // Robot move
@@ -56,12 +83,31 @@ public class PlayerController : MonoBehaviour
             movementController.Vertical = Input.GetAxis("LeftVertical" + PlayerNumber);
             movementController.RightHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
             movementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
-            jumpThrowController.JumpThrow = Input.GetButtonDown("Jump" + PlayerNumber);
+            if(Input.GetButtonDown("Jump" + PlayerNumber))
+            {
+                jumpThrowController.JumpThrow = true;
+            }
             attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
         }
 
         indicator.SetActive(Vector2.Distance(Vector2.zero,
                                 new Vector2(movementController.RightHorizontal, movementController.RightVertical)) > 0.2f);
 
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!other.name.EndsWith("Projectile")) return;
+        if (other.name.StartsWith(name)) return;
+        // Get Damage
+        landingLogic.Detach();
+        Stunned = true;
+        stunTimer = StunTime;
+        rigid.velocity = Vector3.zero;
+        jumpThrowController.KnockBack = other.transform.forward;
+        jumpThrowController.KnockBack.y = 0;
+        jumpThrowController.KnockBack = Vector3.Normalize(jumpThrowController.KnockBack) * 100;
+        jumpThrowController.JumpThrow = true;
+        Debug.Log(name + " damaged by " + other.name);
     }
 }

@@ -9,6 +9,8 @@ public class JumpThrowController : MonoBehaviour {
     public bool JumpThrow;
 
     public float JumpForce;
+    [HideInInspector]
+    public Vector3 KnockBack;
 
     private LandingLogic lander;
     private Rigidbody playerRigidbody;
@@ -23,8 +25,9 @@ public class JumpThrowController : MonoBehaviour {
 		if (JumpThrow)
         {
             lander.Detach();
-            playerRigidbody.AddForce(Vector3.up * JumpForce);
+            playerRigidbody.AddForce(Vector3.up * JumpForce + KnockBack);
             JumpThrow = false;
+            KnockBack = Vector3.zero;
         }
 	}
 }
