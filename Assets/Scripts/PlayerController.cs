@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!other.name.EndsWith("Projectile")) return;
         if (other.name.StartsWith(name)) return;
+        if (other.transform.root == this.transform.root) return;
         // Get Damage
         landingLogic.Detach();
         Stunned = true;

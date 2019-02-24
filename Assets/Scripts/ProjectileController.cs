@@ -9,6 +9,7 @@ public class ProjectileController : MonoBehaviour
 
     public float Speed;
     public float LifeTime;
+    public bool DespawnOnHit;
 
     private Rigidbody rigid;
 
@@ -28,7 +29,7 @@ public class ProjectileController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.name == Origin.name) return;
+        if (other.name == Origin.name || DespawnOnHit) return;
         Destroy(gameObject);
     }
 }

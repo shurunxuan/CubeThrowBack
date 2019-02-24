@@ -17,7 +17,7 @@ public class Robot : MonoBehaviour {
     void Start () {
         //control = GetComponent<CharacterController>();
 	    MovementController = GetComponent<MovementController>();
-	    AttackController = GetComponent<AttackController>();
+	    AttackController = GetComponentInChildren<AttackController>();
 	}
 	
 	// Update is called once per frame

@@ -47,11 +47,20 @@ public class AttackController : MonoBehaviour
             if (Attack && coolDownTimer > AttackCoolDownTime)
             {
                 // Robot attack
-                //RobotAnimator.SetTrigger("Attack");
+                RobotAnimator.SetTrigger("Attack");
                 Debug.Log("Robot attack");
-
                 Attack = false;
                 coolDownTimer = 0;
+
+                // Human Attack
+                GameObject projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
+                projectile.transform.parent = transform;
+
+                projectile.name = name + "Projectile";
+                ProjectileController proj = projectile.GetComponent<ProjectileController>();
+                proj.Origin = gameObject;
+                proj.Direction = transform.forward;
+                projectile.SetActive(true);
             }
         }
         else
@@ -69,7 +78,12 @@ public class AttackController : MonoBehaviour
                 GameObject target = null;
                 foreach (var player in otherPlayers)
                 {
+                    if(player.transform.root == transform.root)
+                    {
+                        continue;
+                    }
                     Vector3 dirToPlayer = player.transform.position - transform.position;
+                    dirToPlayer.y = 0;
                     float angle = Vector3.Angle(transform.forward, dirToPlayer);
                     if (angle < minAngle)
                     {
@@ -81,7 +95,11 @@ public class AttackController : MonoBehaviour
                 if (target != null)
                 {
                     if (minAngle < 20.0f)
-                        projectile.GetComponent<ProjectileController>().Direction = (target.transform.position - transform.position).normalized;
+                    {
+                        Vector3 dirToPlayer = target.transform.position - transform.position;
+                        dirToPlayer.y = 0;
+                        projectile.GetComponent<ProjectileController>().Direction = dirToPlayer.normalized;
+                    }
                 }
 
                 projectile.SetActive(true);
