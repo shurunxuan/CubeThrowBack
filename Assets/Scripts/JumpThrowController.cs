@@ -22,7 +22,7 @@ public class JumpThrowController : MonoBehaviour {
 	void Update () {
 		if (JumpThrow)
         {
-            lander.Jump();
+            lander.Detach();
             playerRigidbody.AddForce(Vector3.up * JumpForce);
             JumpThrow = false;
         }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LandingLogic : MonoBehaviour {
     public float snapToLand;
+    public float snapToFace;
+    public Collider head;
 
     public Robot robot;
     private LandingLogic above;
@@ -25,6 +27,10 @@ public class LandingLogic : MonoBehaviour {
         {
             transform.position = Vector3.MoveTowards(transform.position, below.transform.position, snapToLand * Time.deltaTime);
         }
+        if (robot)
+        {
+            transform.localRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.identity, snapToFace * Time.deltaTime);
+        }
     }
 
     // Landing on stuff
@@ -36,22 +42,38 @@ public class LandingLogic : MonoBehaviour {
             below = other;
             rigid.isKinematic = true;
             belowPlayer = other.transform.root.GetComponentInChildren<LandingLogic>();
-            while (belowPlayer.above) belowPlayer = belowPlayer.above;
-            belowPlayer.above = this;
-
+            if (belowPlayer)
+            {
+                while (belowPlayer.above) belowPlayer = belowPlayer.above;
+                belowPlayer.above = this;
+            }
+            robot = other.transform.root.GetComponent<Robot>();
+            if(robot)
+            {
+                head.enabled = false;
+            }
             transform.parent = other.transform;
         }
     }
 
-    public void Jump()
+    public void Detach()
     {
+        if(!below)
+        {
+            return;
+        }
         if (belowPlayer)
         {
-            StartCoroutine(ReactivateCollider(below));
             belowPlayer.above = null;
             belowPlayer = null;
-            below = null;
         }
+        if(robot)
+        {
+            robot = null;
+            head.enabled = true;
+        }
+        StartCoroutine(ReactivateCollider(below));
+        below = null;
         rigid.isKinematic = false;
         rigid.velocity = Vector3.zero;
         transform.parent = null;
