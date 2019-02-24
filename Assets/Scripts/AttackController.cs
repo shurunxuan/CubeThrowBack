@@ -22,6 +22,7 @@ public class AttackController : MonoBehaviour
 
     private List<GameObject> otherPlayers;
 
+    private LandingLogic landingLogic;
     // Use this for initialization
     void Start()
     {
@@ -32,6 +33,8 @@ public class AttackController : MonoBehaviour
             if (player == gameObject) continue;
             otherPlayers.Add(player);
         }
+
+        landingLogic = GetComponent<LandingLogic>();
     }
 
     // Update is called once per frame
@@ -44,7 +47,8 @@ public class AttackController : MonoBehaviour
             if (Attack && coolDownTimer > AttackCoolDownTime)
             {
                 // Robot attack
-                RobotAnimator.SetTrigger("Attack");
+                //RobotAnimator.SetTrigger("Attack");
+                Debug.Log("Robot attack");
 
                 Attack = false;
                 coolDownTimer = 0;
@@ -93,6 +97,11 @@ public class AttackController : MonoBehaviour
         if (!other.name.EndsWith("Projectile")) return;
         if (other.name.StartsWith(name)) return;
         // Get Damage
+        if (landingLogic.robot != null)
+        {
+            // Detach
+            landingLogic.Detach();
+        }
         Debug.Log(name + " damaged by " + other.name);
     }
 }

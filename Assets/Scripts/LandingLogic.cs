@@ -7,6 +7,7 @@ public class LandingLogic : MonoBehaviour {
     public float snapToFace;
     public Collider head;
 
+    [HideInInspector]
     public Robot robot;
     private LandingLogic above;
     private Collider below;
@@ -29,7 +30,7 @@ public class LandingLogic : MonoBehaviour {
         }
         if (robot)
         {
-            transform.localRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.identity, snapToFace * Time.deltaTime);
+            transform.localRotation = Quaternion.RotateTowards(transform.localRotation, Quaternion.identity, snapToFace * Time.deltaTime);
         }
     }
 
@@ -69,6 +70,13 @@ public class LandingLogic : MonoBehaviour {
         }
         if(robot)
         {
+            // Robot move
+            robot.MovementController.Horizontal = 0;
+            robot.MovementController.Vertical = 0;
+            robot.MovementController.RightHorizontal = 0;
+            robot.MovementController.RightVertical = 0;
+            // Robot attack
+            robot.AttackController.Attack = false;
             robot = null;
             head.enabled = true;
         }

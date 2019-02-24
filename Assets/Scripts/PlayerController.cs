@@ -42,6 +42,13 @@ public class PlayerController : MonoBehaviour
             landingLogic.robot.MovementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
             // Robot attack
             landingLogic.robot.AttackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
+
+            movementController.Horizontal = 0;
+            movementController.Vertical = 0;
+            movementController.RightHorizontal = 0;
+            movementController.RightVertical = 0;
+            jumpThrowController.JumpThrow = false;
+            attackController.Attack = false;
         }
         else
         {
