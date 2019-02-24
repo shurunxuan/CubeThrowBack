@@ -15,7 +15,6 @@ public class MovementController : MonoBehaviour
 
 
     public float MovementSpeed;
-    public bool RotateWhenMove;
 
     private Vector3 cameraForward;
     private Vector3 cameraRight;
@@ -36,8 +35,10 @@ public class MovementController : MonoBehaviour
         Vector3 vel = (cameraForward * Vertical + cameraRight * Horizontal) * MovementSpeed;
         vel.y = yVel;
         rigid.velocity = vel;
-
-        transform.position += (cameraForward * Vertical + cameraRight * Horizontal) * MovementSpeed;
-        transform.LookAt(RightHorizontal * cameraRight + RightVertical * cameraForward + transform.position);
+        vel.y = 0;
+        if (vel != Vector3.zero)
+        {
+            transform.forward = vel;
+        }
     }
 }
