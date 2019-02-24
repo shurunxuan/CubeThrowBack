@@ -91,17 +91,4 @@ public class AttackController : MonoBehaviour
             }
         }
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.name.EndsWith("Projectile")) return;
-        if (other.name.StartsWith(name)) return;
-        // Get Damage
-        if (landingLogic.robot != null)
-        {
-            // Detach
-            landingLogic.Detach();
-        }
-        Debug.Log(name + " damaged by " + other.name);
-    }
 }
