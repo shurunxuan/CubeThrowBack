@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +9,8 @@ public class PlayerController : MonoBehaviour
     private MovementController movementController;
     private JumpThrowController jumpThrowController;
     private AttackController attackController;
+
+    private GameObject indicator;
     // Use this for initialization
     void Start()
     {
@@ -20,6 +20,12 @@ public class PlayerController : MonoBehaviour
         movementController = gameObject.GetComponent<MovementController>();
         jumpThrowController = gameObject.GetComponent<JumpThrowController>();
         attackController = gameObject.GetComponent<AttackController>();
+
+        Transform indicatorTransform = transform.Find("Indicator");
+        if (indicatorTransform == null)
+            Debug.LogError("Please attach an Indicator to the player (both human and robot)!");
+        else
+            indicator = indicatorTransform.gameObject;
     }
 
     // Update is called once per frame
@@ -30,6 +36,11 @@ public class PlayerController : MonoBehaviour
         attackController.HumanAttackHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
         attackController.HumanAttackVertical = Input.GetAxis("RightVertical" + PlayerNumber);
         jumpThrowController.JumpThrow = Input.GetButtonDown("Jump" + PlayerNumber);
-        attackController.RobotAttack = Input.GetButtonDown("Attack" + PlayerNumber);            
+        attackController.RobotAttack = Input.GetButtonDown("Attack" + PlayerNumber);
+
+
+        indicator.SetActive(Vector2.Distance(Vector2.zero,
+                                new Vector2(attackController.HumanAttackHorizontal, attackController.HumanAttackVertical)) > 0.2f);
+
     }
 }
