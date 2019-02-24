@@ -360,7 +360,7 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942245312603740}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 8a918c54b599e7548b1254741f57152c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -379,6 +379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   JumpThrow: 0
   JumpForce: 370
+  KnockBack: {x: 0, y: 0, z: 0}
 --- !u!114 &114463797832200998
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -391,8 +392,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snapToLand: 10
+  snapToFace: 180
   head: {fileID: 135382459357971870}
   robot: {fileID: 0}
+  above: {fileID: 0}
 --- !u!114 &114655762752334400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -405,6 +408,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerNumber: 1
+  StunTime: 1.5
+  KnockBack: 100
+  ThrowBack: 300
 --- !u!114 &114928007809776732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -436,7 +442,7 @@ MonoBehaviour:
   IsRobot: 0
   AttackCoolDownTime: 0.6
   RobotAnimator: {fileID: 0}
-  Projectile: {fileID: 1090848788921186, guid: 106c3212d0c44fb47a6d33bf32470592, type: 2}
+  Projectile: {fileID: 1033843052159460, guid: 8822a0b78d4b7264598ca61277e2b625, type: 2}
 --- !u!135 &135382459357971870
 SphereCollider:
   m_ObjectHideFlags: 1
