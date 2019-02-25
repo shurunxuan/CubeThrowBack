@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class CameraController : MonoBehaviour
 {
 
     public List<Transform> Tracking;
-    
+
     // Use this for initialization
     void Start()
     {
@@ -16,7 +14,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 viewportBBMin = new Vector2(Single.MaxValue, Single.MaxValue);
         Vector3 viewportBBMax = new Vector2(Single.MinValue, Single.MinValue);
@@ -37,11 +35,10 @@ public class CameraController : MonoBehaviour
         Vector3 newViewportCenter = (viewportBBMin + viewportBBMax) / 2.0f;
         Vector3 worldCenter = Camera.main.ViewportToWorldPoint(newViewportCenter);
         float ratio = newSize * 2.0f;
+        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Mathf.Max(Camera.main.orthographicSize * ratio, 10.0f), 2 * Time.fixedDeltaTime);
+        transform.position = Vector3.Lerp(transform.position, worldCenter - transform.forward * 150.0f, 2 * Time.fixedDeltaTime);
 
-        Camera.main.orthographicSize *= ratio;
 
-
-        transform.position = worldCenter - transform.forward * 150.0f;
 
     }
 }
