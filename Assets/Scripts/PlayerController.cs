@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private FloorCollider floor;
 
     private GameObject indicator;
+    private Vector3 startPosition;
 
     private bool stunned;
     public bool Stunned
@@ -51,11 +52,19 @@ public class PlayerController : MonoBehaviour
         else
             indicator = indicatorTransform.gameObject;
 
+        startPosition = transform.position;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (transform.position.y < -5)
+        {
+            // Respawn
+            transform.position = startPosition;
+            rigid.velocity = Vector3.zero;
+        }
         onGround = floor.OnGround();
         if (stunned)
         {
