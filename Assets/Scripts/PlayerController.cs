@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private AttackController attackController;
     private LandingLogic landingLogic;
     private Rigidbody rigid;
+    private FloorCollider floor;
 
     private GameObject indicator;
 
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     private float stunTimer;
-
+    private bool onGround = false;
 
     // Use this for initialization
     void Start()
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
         attackController = GetComponent<AttackController>();
         landingLogic = GetComponent<LandingLogic>();
         rigid = GetComponent<Rigidbody>();
+        floor = GetComponentInChildren<FloorCollider>();
 
         Transform indicatorTransform = transform.Find("Indicator");
         if (indicatorTransform == null)
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        onGround = floor.OnGround();
         if (stunned)
         {
             stunTimer -= Time.deltaTime;
@@ -85,7 +88,7 @@ public class PlayerController : MonoBehaviour
             movementController.Vertical = Input.GetAxis("LeftVertical" + PlayerNumber);
             movementController.RightHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
             movementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
-            if(Input.GetButtonDown("Jump" + PlayerNumber))
+            if(Input.GetButtonDown("Jump" + PlayerNumber) && onGround)
             {
                 if (landingLogic.above)
                 {
@@ -100,12 +103,11 @@ public class PlayerController : MonoBehaviour
                     jumpThrowController.JumpThrow = true;
                 }
             }
-            attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber);
+            attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber) && onGround;
         }
 
         indicator.SetActive(Vector2.Distance(Vector2.zero,
                                 new Vector2(movementController.RightHorizontal, movementController.RightVertical)) > 0.2f);
-
     }
 
     void OnTriggerEnter(Collider other)

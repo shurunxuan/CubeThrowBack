@@ -51,6 +51,10 @@ public class LandingLogic : MonoBehaviour {
             robot = other.transform.root.GetComponent<Robot>();
             if(robot)
             {
+                if(above)
+                {
+                    above.Detach();
+                }
                 head.enabled = false;
             }
             transform.parent = other.transform;
