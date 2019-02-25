@@ -22,7 +22,8 @@ public class PlayerController : MonoBehaviour
     public bool Stunned
     {
         get { return stunned; }
-        set {
+        set
+        {
             stunned = value;
             movementController.enabled = !stunned;
             attackController.enabled = !stunned;
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour
         if (stunned)
         {
             stunTimer -= Time.deltaTime;
-            if(stunTimer < 0)
+            if (stunTimer < 0)
             {
                 Stunned = false;
             }
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
             movementController.Vertical = Input.GetAxis("LeftVertical" + PlayerNumber);
             movementController.RightHorizontal = Input.GetAxis("RightHorizontal" + PlayerNumber);
             movementController.RightVertical = Input.GetAxis("RightVertical" + PlayerNumber);
-            if(Input.GetButtonDown("Jump" + PlayerNumber) && onGround)
+            if (Input.GetButtonDown("Jump" + PlayerNumber) && onGround)
             {
                 if (landingLogic.above)
                 {
@@ -106,8 +107,8 @@ public class PlayerController : MonoBehaviour
             attackController.Attack = Input.GetButtonDown("Attack" + PlayerNumber) && onGround;
         }
 
-        indicator.SetActive(Vector2.Distance(Vector2.zero,
-                                new Vector2(movementController.RightHorizontal, movementController.RightVertical)) > 0.2f);
+        indicator.SetActive(Vector2.Distance(Vector2.zero, new Vector2(movementController.RightHorizontal, movementController.RightVertical)) > 0.2f ||
+                            Vector2.Distance(Vector2.zero, new Vector2(movementController.Horizontal, movementController.Vertical)) > 0.2f);
     }
 
     void OnTriggerEnter(Collider other)

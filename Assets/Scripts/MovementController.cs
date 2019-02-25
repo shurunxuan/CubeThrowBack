@@ -19,7 +19,7 @@ public class MovementController : MonoBehaviour
     private Vector3 cameraForward;
     private Vector3 cameraRight;
     private Rigidbody rigid;
-    
+
     // Use this for initialization
     void Start()
     {
@@ -39,6 +39,12 @@ public class MovementController : MonoBehaviour
         if (vel != Vector3.zero)
         {
             transform.forward = vel;
+        }
+
+        Vector2 rightStick = new Vector2(RightHorizontal, RightVertical);
+        if (rightStick.magnitude > 0.01f)
+        {
+            transform.forward = RightHorizontal * cameraRight + RightVertical * cameraForward;
         }
     }
 }
