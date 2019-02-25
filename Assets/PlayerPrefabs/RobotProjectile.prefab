@@ -21,11 +21,11 @@ GameObject:
   - component: {fileID: 4981236866135454}
   - component: {fileID: 33210828434462384}
   - component: {fileID: 23359121857725856}
-  - component: {fileID: 135744985516212626}
   - component: {fileID: 114101212365778772}
   - component: {fileID: 54607031541685630}
+  - component: {fileID: 65787188884777076}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: RobotProjectile
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,8 +38,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1090848788921186}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 0.79, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalPosition: {x: 9.087913, y: -0.000000114869124, z: -0.9635922}
+  m_LocalScale: {x: 1.8076401, y: 1.8076401, z: 1.8076401}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -50,7 +50,7 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1090848788921186}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -101,6 +101,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!65 &65787188884777076
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1090848788921186}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 2.4765813, z: 0.5}
+  m_Center: {x: 0, y: 0.7382918, z: -0.00000023081614}
 --- !u!114 &114101212365778772
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -114,17 +126,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Origin: {fileID: 0}
   Direction: {x: 0, y: 0, z: 0}
-  Speed: 0.5
-  LifeTime: 1
---- !u!135 &135744985516212626
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1090848788921186}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  Speed: 0
+  LifeTime: 0.5
+  DespawnOnHit: 1

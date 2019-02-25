@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Robot : MonoBehaviour {
-    public float speed;
-    public Collider hitbox;
+    
+    //public Collider hitbox;
 
-    public CharacterController control;
+    //public CharacterController control;
 
-	// Use this for initialization
-	void Start () {
-        control = GetComponent<CharacterController>();
+    [HideInInspector]
+    public MovementController MovementController;
+    [HideInInspector]
+    public AttackController AttackController;
+
+    // Use this for initialization
+    void Start () {
+        //control = GetComponent<CharacterController>();
+	    MovementController = GetComponent<MovementController>();
+	    AttackController = GetComponentInChildren<AttackController>();
 	}
 	
 	// Update is called once per frame

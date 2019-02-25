@@ -6,11 +6,7 @@ public class AttackController : MonoBehaviour
 
     // Set by PlayerController
     [HideInInspector]
-    public bool RobotAttack;
-    [HideInInspector]
-    public float HumanAttackHorizontal;
-    [HideInInspector]
-    public float HumanAttackVertical;
+    public bool Attack;
 
     public bool IsRobot;
 
@@ -22,25 +18,14 @@ public class AttackController : MonoBehaviour
     [Header("Human Attack Properties")]
     public GameObject Projectile;
 
-    private Vector3 cameraForward;
-    private Vector3 cameraRight;
-
-    private float lastHorizontal;
-    private float lastVertical;
-
     private float coolDownTimer;
 
     private List<GameObject> otherPlayers;
 
+    private LandingLogic landingLogic;
     // Use this for initialization
     void Start()
     {
-        cameraForward = Vector3.Cross(Camera.main.transform.right, Vector3.up);
-        cameraRight = Vector3.Cross(Vector3.up, cameraForward);
-
-        lastHorizontal = 0;
-        lastVertical = 0;
-
         otherPlayers = new List<GameObject>(3);
         GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
         foreach (var player in allPlayers)
@@ -48,6 +33,8 @@ public class AttackController : MonoBehaviour
             if (player == gameObject) continue;
             otherPlayers.Add(player);
         }
+
+        landingLogic = GetComponent<LandingLogic>();
     }
 
     // Update is called once per frame
@@ -57,27 +44,28 @@ public class AttackController : MonoBehaviour
 
         if (IsRobot)
         {
-            if (RobotAttack && coolDownTimer > AttackCoolDownTime)
+            if (Attack && coolDownTimer > AttackCoolDownTime)
             {
                 // Robot attack
                 RobotAnimator.SetTrigger("Attack");
-
-                RobotAttack = false;
+                Debug.Log("Robot attack");
+                Attack = false;
                 coolDownTimer = 0;
+
+                // Human Attack
+                GameObject projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
+                projectile.transform.parent = transform;
+
+                projectile.name = name + "Projectile";
+                ProjectileController proj = projectile.GetComponent<ProjectileController>();
+                proj.Origin = gameObject;
+                proj.Direction = transform.forward;
+                projectile.SetActive(true);
             }
         }
         else
         {
-            // Human rotation
-            float horDiff = HumanAttackHorizontal - lastHorizontal;
-            float verDiff = HumanAttackVertical - lastVertical;
-            Vector2 lastAbs = new Vector2(lastHorizontal, lastVertical);
-            Vector2 absolute = new Vector2(HumanAttackHorizontal, HumanAttackVertical);
-            Vector2 diff = new Vector2(horDiff, verDiff);
-            transform.LookAt(HumanAttackHorizontal * cameraRight + HumanAttackVertical * cameraForward +
-                             transform.position);
-
-            if (diff.magnitude > 0.3f && absolute.magnitude > 0.5f && lastAbs.magnitude < 0.5f && coolDownTimer > AttackCoolDownTime)
+            if (Attack && coolDownTimer > AttackCoolDownTime)
             {
                 // Human Attack
                 GameObject projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
@@ -90,7 +78,12 @@ public class AttackController : MonoBehaviour
                 GameObject target = null;
                 foreach (var player in otherPlayers)
                 {
+                    if(player.transform.root == transform.root)
+                    {
+                        continue;
+                    }
                     Vector3 dirToPlayer = player.transform.position - transform.position;
+                    dirToPlayer.y = 0;
                     float angle = Vector3.Angle(transform.forward, dirToPlayer);
                     if (angle < minAngle)
                     {
@@ -102,25 +95,18 @@ public class AttackController : MonoBehaviour
                 if (target != null)
                 {
                     if (minAngle < 20.0f)
-                        projectile.GetComponent<ProjectileController>().Direction = (target.transform.position - transform.position).normalized;
+                    {
+                        Vector3 dirToPlayer = target.transform.position - transform.position;
+                        dirToPlayer.y = 0;
+                        projectile.GetComponent<ProjectileController>().Direction = dirToPlayer.normalized;
+                    }
                 }
 
                 projectile.SetActive(true);
 
                 coolDownTimer = 0;
+                Attack = false;
             }
         }
-
-        lastHorizontal = HumanAttackHorizontal;
-        lastVertical = HumanAttackVertical;
-
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.name.EndsWith("Projectile")) return;
-        if (other.name.StartsWith(name)) return;
-        // Get Damage
-        Debug.Log(name + " damaged by " + other.name);
     }
 }

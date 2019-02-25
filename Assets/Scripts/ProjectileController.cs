@@ -9,23 +9,27 @@ public class ProjectileController : MonoBehaviour
 
     public float Speed;
     public float LifeTime;
+    public bool DespawnOnHit;
 
+    private Rigidbody rigid;
 
     // Use this for initialization
     void Start()
     {
         Destroy(gameObject, LifeTime);
+        rigid = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += Direction * Speed;
+        rigid.MovePosition(transform.position + Direction * Speed);
+        transform.forward = Direction;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.name == Origin.name) return;
+        if (other.name == Origin.name || DespawnOnHit) return;
         Destroy(gameObject);
     }
 }
