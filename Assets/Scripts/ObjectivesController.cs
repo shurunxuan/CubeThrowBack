@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ObjectivesController : MonoBehaviour
 {
-    public int doorHealth = 20;
+    public int doorHealth = 2;
+    public GameObject hitEffect;
+    public GameObject breakEffect;
 
     private float targetTime = 60.0f;
 
@@ -18,11 +20,13 @@ public class ObjectivesController : MonoBehaviour
 	void Update ()
     {
         // Check if the door is smashed or if the time has run out
-        if (doorHealth <= 0)
+        if (doorHealth == 0)
         {
             GameObject.Find("HealthBar").gameObject.transform.localScale = Vector3.zero;
+            GameObject doorPieces = Instantiate(breakEffect, this.transform.position, Quaternion.identity);
+            Destroy(this.gameObject);
             GameObject.Find("GameOverText").GetComponent<UnityEngine.UI.Text>().text = "ROBOT IS VICTORIOUS!";
-            Time.timeScale = 0;
+            Time.timeScale = 0.25f;
         }
         if (targetTime <= 0)
         {
@@ -74,6 +78,8 @@ public class ObjectivesController : MonoBehaviour
         if (!other.name.Contains("HitboxSpot")) return;
 
         // Get Damage
+        Instantiate(hitEffect, other.transform.position, Quaternion.identity);
+        
         doorHealth--;
     }
 }
