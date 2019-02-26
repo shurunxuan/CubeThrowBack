@@ -70,6 +70,7 @@ public class AttackController : MonoBehaviour
                 // Human Attack
                 GameObject projectile = Instantiate(Projectile, transform.position, Quaternion.identity);
                 projectile.name = name + "Projectile";
+                Debug.Log(projectile.name);
                 projectile.GetComponent<ProjectileController>().Origin = gameObject;
 
                 // A little auto aim
