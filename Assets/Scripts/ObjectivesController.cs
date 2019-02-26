@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectivesController : MonoBehaviour
 {
-    public int doorHealth = 2;
+    public int doorHealth = 20;
     public GameObject hitEffect;
     public GameObject breakEffect;
 

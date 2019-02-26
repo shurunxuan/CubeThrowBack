@@ -11,6 +11,7 @@ public class AttackController : MonoBehaviour
     public bool IsRobot;
 
     public float AttackCoolDownTime;
+    public float robotAttackCoolDownTime;
 
     [Header("Robot Attack Properties")]
     public Animator RobotAnimator;
@@ -44,7 +45,7 @@ public class AttackController : MonoBehaviour
 
         if (IsRobot)
         {
-            if (Attack && coolDownTimer > AttackCoolDownTime)
+            if (Attack && coolDownTimer > robotAttackCoolDownTime)
             {
                 // Robot attack
                 RobotAnimator.SetTrigger("Attack");
